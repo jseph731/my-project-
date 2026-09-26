@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>مساعد الأكواد الذكي</title>
+    <style>
+        body { font-family: sans-serif; background: #1e1e2e; color: #cdd6f4; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .container { width: 100%; max-width: 800px; background: #313244; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        textarea { width: 97%; height: 100px; background: #11111b; color: #a6e3a1; border: 1px solid #45475a; border-radius: 4px; padding: 10px; font-size: 16px; resize: none; }
+        button { background: #89b4fa; color: #11111b; border: none; padding: 12px 20px; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
+        button:hover { background: #b4befe; }
+        pre { background: #181825; padding: 15px; border-radius: 4px; overflow-x: auto; border-left: 4px solid #f38ba8; white-space: pre-wrap; font-family: monospace; }
+        .loading { color: #f9e2af; font-weight: bold; display: none; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>💻 اكتب طلبك البرمجي هنا:</h2>
+        <textarea id="prompt" placeholder="مثال: اكتب كود دالة لحساب الأعداد الأولية بلغة بايثون..."></textarea>
+        <button onclick="generateCode()">توليد الكود الذكي 🚀</button>
+        <div id="loading" class="loading">⏳ جاري معالجة الكود بسرعة فائقة عبر السحاب...</div>
+        <h3>📄 النتيجة:</h3>
+        <pre id="output">// الكود البرمجي سيظهر هنا بدقة متناهية...</pre>
+    </div>
+
+    <script>
+        async function generateCode() {
+            const promptText = document.getElementById('prompt').value;
+            const outputBox = document.getElementById('output');
+            const loadingBox = document.getElementById('loading');
+            if(!promptText) return alert('برجاء كتابة طلب أولاً');
+
+            loadingBox.style.display = 'block';
+            outputBox.innerText = 'انتظر قليلاً...';
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userPrompt: promptText })
+                });
+                const data = await response.json();
+                outputBox.innerText = data.result || data.error;
+            } catch (err) {
+                outputBox.innerText = 'حدث خطأ في الاتصال بالخلفية.';
+            } finally {
+                loadingBox.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
+
